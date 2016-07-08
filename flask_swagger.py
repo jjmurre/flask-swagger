@@ -88,7 +88,7 @@ def _extract_definitions(alist, level=None):
     return defs
 
 
-def swagger(app, process_doc=_sanitize, template=None):
+def swagger(app, process_doc=_sanitize, template=None, prefix=None):
     """
     Call this from an @app.route method like this
     @app.route('/spec.json')
@@ -176,5 +176,7 @@ def swagger(app, process_doc=_sanitize, template=None):
             rule = str(rule)
             for arg in re.findall('(<([^<>]*:)?([^<>]*)>)', rule):
                 rule = rule.replace(arg[0], '{%s}' % arg[2])
+                if prefix is not None:
+                    rule = "%s/%s" % (prefix, rule)
             paths[rule].update(operations)
     return output
